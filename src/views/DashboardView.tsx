@@ -1,4 +1,4 @@
-import { Play, Download, ExternalLink } from 'lucide-react';
+import { Play, Download, ExternalLink, ArrowLeft } from 'lucide-react';
 import { ContentItem } from '../types';
 import EmptyState from '../components/EmptyState';
 
@@ -15,7 +15,16 @@ const DashboardView = ({ items, onAddContent }: DashboardViewProps) => {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Your Dashboard</h1>
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={onAddContent}
+            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-200"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Upload
+          </button>
+          <h1 className="text-2xl font-bold text-gray-900">Your Dashboard</h1>
+        </div>
         <div className="flex space-x-2">
           <button className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-200">
             <Download className="h-4 w-4 mr-2" />

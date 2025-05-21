@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import * as mongoose from 'mongoose';
 import { ContentItem, Recommendation } from '../types';
 
 const MONGODB_URI = import.meta.env.VITE_MONGODB_URI || 'mongodb://localhost:27017/learnsync';

@@ -53,16 +53,14 @@ const UploadView = ({ onContentProcessed }: UploadViewProps) => {
     setError('');
 
     try {
-      setTimeout(() => {
-        const mockData = generateMockData(
-          title,
-          activeTab === 'notes' ? 'notes' : 'video',
-          activeTab === 'video' ? videoUrl : undefined
-        );
-        onContentProcessed(mockData);
-        setIsProcessing(false);
-        resetForm();
-      }, 2000);
+      const mockData = await generateMockData(
+        title,
+        activeTab === 'notes' ? 'notes' : 'video',
+        activeTab === 'video' ? videoUrl : undefined
+      );
+      onContentProcessed(mockData);
+      setIsProcessing(false);
+      resetForm();
     } catch (err) {
       setError('An error occurred while processing your content');
       setIsProcessing(false);

@@ -1,16 +1,8 @@
 import { ContentItem, Recommendation } from '../types';
+import { searchYouTubeVideos } from '../services/youtube';
 
 // Helper to generate random IDs
 const generateId = () => Math.random().toString(36).substring(2, 15);
-
-// Mock YouTube thumbnails from Pexels
-const thumbnails = [
-  'https://images.pexels.com/photos/4050315/pexels-photo-4050315.jpeg?auto=compress&cs=tinysrgb&w=600',
-  'https://images.pexels.com/photos/4145354/pexels-photo-4145354.jpeg?auto=compress&cs=tinysrgb&w=600',
-  'https://images.pexels.com/photos/4144179/pexels-photo-4144179.jpeg?auto=compress&cs=tinysrgb&w=600',
-  'https://images.pexels.com/photos/4065183/pexels-photo-4065183.jpeg?auto=compress&cs=tinysrgb&w=600',
-  'https://images.pexels.com/photos/4498172/pexels-photo-4498172.jpeg?auto=compress&cs=tinysrgb&w=600'
-];
 
 // Mock video titles
 const videoTitles = [
@@ -22,23 +14,6 @@ const videoTitles = [
   'The Future of Artificial Intelligence: Ethics and Challenges'
 ];
 
-// Generate mock recommendations
-const generateRecommendations = (title: string): Recommendation[] => {
-  const keywords = title.toLowerCase().split(' ');
-  
-  return Array(6).fill(null).map((_, index) => {
-    const randomTitle = videoTitles[Math.floor(Math.random() * videoTitles.length)];
-    
-    return {
-      id: generateId(),
-      title: randomTitle,
-      url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-      thumbnailUrl: thumbnails[index % thumbnails.length],
-      source: 'youtube'
-    };
-  });
-};
-
 // Generate mock summaries based on content type
 const generateMockSummary = (title: string, type: 'notes' | 'video'): string => {
   if (type === 'notes') {
@@ -49,19 +24,24 @@ const generateMockSummary = (title: string, type: 'notes' | 'video'): string => 
 };
 
 // Generate mock data for a content item
-export const generateMockData = (
+export const generateMockData = async (
   title: string, 
   type: 'notes' | 'video',
   videoUrl?: string
-): ContentItem => {
+): Promise<ContentItem> => {
+  // Fetch real YouTube recommendations based on the title
+  const recommendations = await searchYouTubeVideos(title);
+
   return {
     id: generateId(),
     title,
     type,
     summary: generateMockSummary(title, type),
-    recommendations: generateRecommendations(title),
+    recommendations,
     createdAt: new Date(),
-    thumbnailUrl: type === 'video' ? thumbnails[Math.floor(Math.random() * thumbnails.length)] : undefined,
+    thumbnailUrl: type === 'video' && recommendations.length > 0 
+      ? recommendations[0].thumbnailUrl 
+      : undefined,
     audioUrl: type === 'notes' ? '/mock-audio.mp3' : undefined
   };
 };

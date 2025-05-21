@@ -1,18 +1,9 @@
 import { ContentItem, Recommendation } from '../types';
 import { searchYouTubeVideos } from '../services/youtube';
+import { saveContent } from '../services/mongodb';
 
 // Helper to generate random IDs
 const generateId = () => Math.random().toString(36).substring(2, 15);
-
-// Mock video titles
-const videoTitles = [
-  'Understanding Advanced Concepts in Machine Learning',
-  'Deep Dive into Neural Networks and Deep Learning',
-  'Introduction to Data Structures and Algorithms',
-  'Comprehensive Guide to Modern Web Development',
-  'Quantum Computing: Principles and Applications',
-  'The Future of Artificial Intelligence: Ethics and Challenges'
-];
 
 // Generate mock summaries based on content type
 const generateMockSummary = (title: string, type: 'notes' | 'video'): string => {
@@ -32,7 +23,7 @@ export const generateMockData = async (
   // Fetch real YouTube recommendations based on the title
   const recommendations = await searchYouTubeVideos(title);
 
-  return {
+  const content: ContentItem = {
     id: generateId(),
     title,
     type,
@@ -44,4 +35,9 @@ export const generateMockData = async (
       : undefined,
     audioUrl: type === 'notes' ? '/mock-audio.mp3' : undefined
   };
+
+  // Save to MongoDB
+  await saveContent(content);
+
+  return content;
 };
